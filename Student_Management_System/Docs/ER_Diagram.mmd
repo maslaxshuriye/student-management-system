@@ -1,0 +1,78 @@
+
+erDiagram
+    DEPARTMENTS {
+        int department_id PK
+        varchar department_name
+        varchar location
+    }
+
+    STUDENTS {
+        int student_id PK
+        int department_id FK
+        varchar first_name
+        varchar last_name
+        varchar email UK
+        date date_of_birth
+        date admission_date
+    }
+
+    INSTRUCTORS {
+        int instructor_id PK
+        int department_id FK
+        varchar first_name
+        varchar last_name
+        varchar email UK
+    }
+
+    COURSES {
+        int course_id PK
+        int department_id FK
+        int instructor_id FK
+        varchar course_name
+        varchar course_code UK
+        int credit_hours
+    }
+
+    ENROLLMENTS {
+        int enrollment_id PK
+        int student_id FK
+        int course_id FK
+        date enrollment_date
+        varchar status
+    }
+
+    ASSESSMENTS {
+        int assessment_id PK
+        int course_id FK
+        varchar assessment_name
+        decimal maximum_score
+        date assessment_date
+    }
+
+    RESULTS {
+        int result_id PK
+        int student_id FK
+        int assessment_id FK
+        decimal score
+        date recorded_at
+    }
+
+    AUDIT_LOGS {
+        bigint audit_id PK
+        varchar table_name
+        varchar operation
+        int record_id
+        timestamp changed_at
+        jsonb old_values
+        jsonb new_values
+    }
+
+    DEPARTMENTS ||--o{ STUDENTS : contains
+    DEPARTMENTS ||--o{ INSTRUCTORS : employs
+    DEPARTMENTS ||--o{ COURSES : offers
+    INSTRUCTORS ||--o{ COURSES : teaches
+    STUDENTS ||--o{ ENROLLMENTS : registers
+    COURSES ||--o{ ENROLLMENTS : has
+    COURSES ||--o{ ASSESSMENTS : includes
+    STUDENTS ||--o{ RESULTS : receives
+    ASSESSMENTS ||--o{ RESULTS : produces
